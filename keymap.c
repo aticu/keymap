@@ -40,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Otherwise, it needs KC_*
 [BASE] = KEYMAP(  // layer 0 : default
         // left hand
-        DE_DELETE,      DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   STENO,
+        KC_DELETE,      DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   STENO,
         KC_FN1,         DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
