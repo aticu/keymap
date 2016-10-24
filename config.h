@@ -17,4 +17,10 @@
     #undef MOUSEKEY_WHEEL_DELAY
     #define MOUSEKEY_DELAY 0
     #define MOUSEKEY_WHEEL_DELAY 0
+
+    //Make the space cadet feature more accessible.
+    #define DISABLE_SPACE_CADET_ROLLOVER
+
+    //To avoid frustration.
+    #define PREVENT_STUCK_MODIFIERS
 #endif

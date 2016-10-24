@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | ~L1    |   Q  |   W  |   E  |   R  |   T  |  "   |           |  +   |   Z  |   U  |   I  |   O  |   P  |   Ü    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | BkSp   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   Ö  |   Ä    |
- * |--------+------+------+------+------+------|  #   |           |  /   |------+------+------+------+------+--------|
+ * |--------+------+------+------+------+------|  /   |           |  #   |------+------+------+------+------+--------|
  * | LSh/(  |   Y  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   -  | RSh/)  |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   | ~L1  |   ´  |   <  | Left | Right|                                       |  Up  | Down | AltGr| RCtrl| ~L2  |
@@ -43,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         DE_DELETE,      DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   STENO,
         KC_FN1,         DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
-        KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_HASH,
+        KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
         KC_FN1,         DE_ACUT,      DE_LESS,KC_LEFT,KC_RGHT,
                                                  COPYPASTE,   KC_LCTL,
                                                                KC_APP,
@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              CLOSE,       DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
              DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
                           DE_H,   DE_J,   DE_K,   DE_L,   DE_OE,            DE_AE,
-             DE_SLSH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
+             DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
                                   KC_UP,  KC_DOWN,DE_ALGR,KC_RCTL,          KC_FN2,
              KC_HOME, KC_END,
              KC_LGUI,
