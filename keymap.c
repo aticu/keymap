@@ -29,11 +29,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | ~L1  |   ´  |   <  | Left | Right|                                       |  Up  | Down | AltGr| RCtrl| ~L2  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | C/P  | App  |       | Home | End  |
+ *                                        | C/P  | LCtrl|       | Home | End  |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      | Ins  |       | GUI  |      |      |
+ *                                 |      |      | App  |       | GUI  |      |      |
  *                                 | Space| Esc  |------|       |------| Tab  |Enter |
- *                                 |      |      | Alt  |       | LCtrl|      |      |
+ *                                 |      |      | Alt  |       | Alt  |      |      |
  *                                 `--------------------'       `--------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
@@ -45,8 +45,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_HASH,
         KC_FN1,         DE_ACUT,      DE_LESS,KC_LEFT,KC_RGHT,
-                                                 COPYPASTE,    KC_APP,
-                                                            KC_INSERT,
+                                                 COPYPASTE,   KC_LCTL,
+                                                               KC_APP,
                                             KC_SPC, KC_ESC,   KC_LALT,
         // right hand
              CLOSE,       DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
@@ -56,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   KC_UP,  KC_DOWN,DE_ALGR,KC_RCTL,          KC_FN2,
              KC_HOME, KC_END,
              KC_LGUI,
-             KC_LCTL, KC_TAB, KC_ENT
+             KC_LALT, KC_TAB, KC_ENT
     ),
 /* Keymap 1: Symbol Layer
  *
