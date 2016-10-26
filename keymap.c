@@ -168,7 +168,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Plover
 [PLVR] = KEYMAP(
     // left hand
-       KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   STENO,
+       STENO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
        KC_NO,   PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,
        KC_NO,   PV_LS,   PV_LT,   PV_LP,   PV_LH,   PV_STAR,
        KC_NO,   PV_LS,   PV_LK,   PV_LW,   PV_LR,   PV_STAR, PV_STAR,
@@ -248,7 +248,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             }
             else { //when the key is released, decide what to do
                 //NOTICE: the keys are swapped, because this is for a German keyboard layout
-                if(timer_elapsed(paste_key_timer) > TAP_TIME) { //holding is more than 200ms
+                if(timer_elapsed(undo_key_timer) > TAP_TIME) { //holding is more than 200ms
                     return MACRO(D(LCTL), T(Z), U(LCTL), END); //redo when held
                 }
                 else {
@@ -258,7 +258,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             break;
         case 4: //Arrow
             if(!record->event.pressed)
-                SEND_STRING("->");
+                return MACRO(T(SLSH), D(LSFT), T(NUBS), U(LSFT), END);
             break;
       }
     return MACRO_NONE;
