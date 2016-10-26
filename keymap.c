@@ -13,12 +13,14 @@
 #define COPYPASTE M(0) // Macro 0: The copy paste key
 #define STENO M(1) // Macro 1: Switch to steno layer and activate plover
 #define CLOSE M(2) //Macro 2: Close the currently opened window
+#define UNDOREDO M(3) //Macro 3: The undo redo key
+#define ARROW M(4) //Macro 4: Inserts an arrow
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * | Del    |   1  |   2  |   3  |   4  |   5  | Steno|           | Close|   6  |   7  |   8  |   9  |   0  |   ß    |
+ * | Steno  |   1  |   2  |   3  |   4  |   5  | Del  |           | U/R  |   6  |   7  |   8  |   9  |   0  |   ß    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | ~L1    |   Q  |   W  |   E  |   R  |   T  |  "   |           |  +   |   Z  |   U  |   I  |   O  |   P  |   Ü    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -26,10 +28,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|  /   |           |  #   |------+------+------+------+------+--------|
  * | LSh/(  |   Y  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   -  | RSh/)  |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | ~L1  |   ´  |   <  | Left | Right|                                       |  Up  | Down | AltGr| RCtrl| ~L2  |
+ *   | LCtrl| Print|   <  | Left | Right|                                       |  Up  | Down | AltGr| RCtrl| ~L2  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | C/P  | LCtrl|       | Home | End  |
+ *                                        | C/P  | Close|       | Home | End  |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      | App  |       | GUI  |      |      |
  *                                 | Space| Esc  |------|       |------| Tab  |Enter |
@@ -40,16 +42,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Otherwise, it needs KC_*
 [BASE] = KEYMAP(  // layer 0 : default
         // left hand
-        KC_DELETE,      DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   STENO,
+        STENO,          DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
         KC_FN1,         DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
-        KC_FN1,         DE_ACUT,      DE_LESS,KC_LEFT,KC_RGHT,
-                                                 COPYPASTE,   KC_LCTL,
+        KC_LCTL,        KC_PSCREEN,   DE_LESS,KC_LEFT,KC_RGHT,
+                                                 COPYPASTE,     CLOSE,
                                                                KC_APP,
                                             KC_SPC, KC_ESC,   KC_LALT,
         // right hand
-             CLOSE,       DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
+             UNDOREDO,    DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
              DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
                           DE_H,   DE_J,   DE_K,   DE_L,   DE_OE,            DE_AE,
              DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
@@ -61,15 +63,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 1: Symbol Layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |        |
+ * |        |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |           |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |   ´    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |   !  |   @  |   <  |   >  |   |  |  [   |           |  ]   |   =  |   7  |   8  |   9  |   *  |        |
+ * |        |   !  |   @  |   <  |   >  |   %  |  [   |           |  ]   |   /  |   7  |   8  |   9  |   *  |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |        |   #  |   $  |   '  |   \  |   0  |------|           |------|   .  |   4  |   5  |   6  |   +  |        |
  * |--------+------+------+------+------+------|  {   |           |  }   |------+------+------+------+------+--------|
- * |        |  F11 |   ^  |   %  |   &  |   ~  |      |           |      |   ,  |   1  |   2  |   3  |  F12 |        |
+ * |        |   ~  |   =  |   ^  |   &  |   |  |      |           |      |   ,  |   1  |   2  |   3  |   -  |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |      |      |      |      |                                       |      |      |   0  |      |      |
+ *   |      |  ->  |   €  |      |      |                                       |      |      |   0  |      |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |      |       |      |      |
@@ -82,20 +84,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // SYMBOLS
 [SYMB] = KEYMAP(
        // left hand
-       KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_TRNS,
-       KC_TRNS, DE_EXLM, DE_AT,   DE_LESS, DE_MORE, DE_PIPE, DE_LBRC,
-       KC_TRNS, DE_HASH, DE_DLR,  DE_QUOT, DE_BSLS, DE_0,
-       KC_TRNS, KC_F11,  DE_CIRC, DE_PERC, DE_AMPR, DE_TILD, DE_LCBR,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
+       KC_TRNS, DE_EXLM, DE_AT,   DE_LESS, DE_MORE, DE_PERC, DE_LBRC,
+       KC_TRNS, DE_HASH, DE_DLR,  DE_QUOT, DE_BSLS, KC_P0,
+       KC_TRNS, DE_TILD, DE_EQL,  DE_CIRC, DE_AMPR, DE_PIPE, DE_LCBR,
+       KC_TRNS, ARROW,   DE_EURO, KC_TRNS, KC_TRNS,
                                        KC_TRNS,KC_TRNS,
                                                KC_TRNS,
                                KC_TRNS,KC_TRNS,KC_TRNS,
        // right hand
-       KC_TRNS, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_TRNS,
-       DE_RBRC, DE_EQL,  DE_7,    DE_8,    DE_9,    DE_ASTR, KC_TRNS,
-                DE_DOT,  DE_4,    DE_5,    DE_6,    DE_PLUS, KC_TRNS,
-       DE_RCBR, DE_COMM, DE_1,    DE_2,    DE_3,    KC_F12,  KC_TRNS,
-                         KC_TRNS, KC_TRNS, DE_0,    KC_TRNS, KC_TRNS,
+       KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  DE_ACUT,
+       DE_RBRC, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, KC_TRNS,
+                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, KC_TRNS,
+       DE_RCBR, DE_COMM, KC_P1,   KC_P2,   KC_P3,   KC_PMNS, KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_P0,   KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS,
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS
@@ -103,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 2: Media and mouse keys
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |      |      |      |      | Power|           | Calc |      |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * |        |      |      | MsUp |      |      |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -117,30 +119,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                        |      |      |       |      |      |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |      |       |      |      |      |
- *                                 | Lclk | Btn4 |------|       |------| Btn5 | Rclk |
- *                                 |      |      |      |       |      |      |      |
+ *                                 | Lclk | Back |------|       |------| Fwd  | Rclk |
+ *                                 |      |      | Wh_up|       |Wh_dwn|      |      |
  *                                 `--------------------'       `--------------------'
  */
 // MEDIA AND MOUSE
 [MDIA] = KEYMAP(
     // left hand
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PWR,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                            KC_TRNS, KC_TRNS,
                                                     KC_TRNS,
-                                  KC_BTN1, KC_BTN4, KC_TRNS,
+                                  KC_BTN1, KC_WBAK, KC_WH_U,
     // right hand
-       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_CALC,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPLY,
        KC_TRNS,  KC_TRNS, KC_TRNS, KC_MPRV, KC_MNXT, KC_TRNS, KC_TRNS,
                           KC_VOLU, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_TRNS,
        KC_TRNS,
-       KC_TRNS, KC_BTN5, KC_BTN2
+       KC_WH_D, KC_WFWD, KC_BTN2
 ),
 /* Keymap 3: Plover
  *
@@ -192,6 +194,8 @@ const uint16_t PROGMEM fn_actions[] = {
 };
 
 static uint16_t paste_key_timer;
+static uint16_t undo_key_timer;
+static const uint16_t TAP_TIME = 200;
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
@@ -201,7 +205,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 paste_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
             }
             else { //when the key is released, decide what to do
-                if(timer_elapsed(paste_key_timer) > 200) { //holding is more than 200ms
+                if(timer_elapsed(paste_key_timer) > TAP_TIME) { //holding is more than 200ms
                     return MACRO(D(LCTL), T(C), U(LCTL), END); //copy when held
                 }
                 else {
@@ -238,24 +242,30 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             if(!record->event.pressed)
                 return MACRO(D(LALT), T(F4), U(LALT), END);
             break;
+        case 3: //Undo/redo
+            if (record->event.pressed) { //when the key is pressed
+                undo_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
+            }
+            else { //when the key is released, decide what to do
+                //NOTICE: the keys are swapped, because this is for a German keyboard layout
+                if(timer_elapsed(paste_key_timer) > TAP_TIME) { //holding is more than 200ms
+                    return MACRO(D(LCTL), T(Z), U(LCTL), END); //redo when held
+                }
+                else {
+                    return MACRO(D(LCTL), T(Y), U(LCTL), END); //undo when tapped
+                }
+            }
+            break;
+        case 4: //Arrow
+            if(!record->event.pressed)
+                SEND_STRING("->");
+            break;
       }
     return MACRO_NONE;
 };
 
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
-    uint8_t on = 0;
-    uint8_t steps = 10;
-    uint8_t increase = LED_BRIGHTNESS_HI / steps;
-    
-    for(int i = 0; i < 10; ++i) {
-        if(on)
-            ergodox_led_all_set(i * increase);
-        else
-            ergodox_led_all_off();
-        on = !on;
-        wait_ms(10);
-    }
 };
 
 
