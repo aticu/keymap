@@ -18,6 +18,8 @@
     #define MOUSEKEY_DELAY 0
     #define MOUSEKEY_WHEEL_DELAY 0
 
+    #define LEADER_TIMEOUT 300
+
     //Make the space cadet feature more accessible.
     #define DISABLE_SPACE_CADET_ROLLOVER
 

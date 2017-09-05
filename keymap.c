@@ -1,9 +1,12 @@
-#include "ergodox.h"
+#include QMK_KEYBOARD_H
 #include "debug.h"
 #include "action_layer.h"
 #include "version.h"
 #include "keymap_german.h"
 #include "keymap_plover.h"
+#include <util/atomic.h>
+
+#define TAP_TIME 100
 
 #define BASE 0 // default layer
 #define SYMB 1 // symbols
@@ -14,13 +17,19 @@
 #define STENO M(1) // Macro 1: Switch to steno layer and activate plover
 #define CLOSE M(2) //Macro 2: Close the currently opened window
 #define UNDOREDO M(3) //Macro 3: The undo redo key
-#define ARROW M(4) //Macro 4: Inserts an arrow
+#define ARROW M(4) //Macro 4: Inserts an arrow (->)
+#define EQARROW M(5) //Macro 5: Inserts a different arrow (=>)
+#define GAME_U M(6) //Macro 6: Presses the UP key for games
+#define GAME_D M(7) //Macro 7: Presses the DOWN key for games
+#define GAME_L M(8) //Macro 8: Presses the LEFT key for games
+#define GAME_R M(9) //Macro 9: Presses the RIGHT key for games
+#define GAME_TG M(10) //Macro 10: Toggle between using the arrow keys and WASD for games
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * | Steno  |   1  |   2  |   3  |   4  |   5  | Del  |           | U/R  |   6  |   7  |   8  |   9  |   0  |   ß    |
+ * | ~L2    |   1  |   2  |   3  |   4  |   5  | Del  |           | U/R  |   6  |   7  |   8  |   9  |   0  |   ß    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | ~L1    |   Q  |   W  |   E  |   R  |   T  |  "   |           |  +   |   Z  |   U  |   I  |   O  |   P  |   Ü    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -28,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|  /   |           |  #   |------+------+------+------+------+--------|
  * | LSh/(  |   Y  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   -  | RSh/)  |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LCtrl| Print|   <  | Left | Right|                                       |  Up  | Down | AltGr| RCtrl| ~L2  |
+ *   | LCtrl| AltGr| Lead | Left | Right|                                       |  Up  | Down | ~L1  | RCtrl| Play |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | C/P  | Close|       | Home | End  |
@@ -42,11 +51,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Otherwise, it needs KC_*
 [BASE] = KEYMAP(  // layer 0 : default
         // left hand
-        STENO,          DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
+        KC_FN2,         DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
         KC_FN1,         DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
-        KC_LCTL,        KC_PSCREEN,   DE_LESS,KC_LEFT,KC_RGHT,
+        KC_LCTL,        DE_ALGR,      KC_LEAD,KC_LEFT,KC_RGHT,
                                                  COPYPASTE,     CLOSE,
                                                                KC_APP,
                                             KC_SPC, KC_ESC,   KC_LALT,
@@ -55,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
                           DE_H,   DE_J,   DE_K,   DE_L,   DE_OE,            DE_AE,
              DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
-                                  KC_UP,  KC_DOWN,DE_ALGR,KC_RCTL,          KC_FN2,
+                                  KC_UP,  KC_DOWN,KC_FN1, KC_RCTL,          KC_MPLY,
              KC_HOME, KC_END,
              KC_LGUI,
              KC_LALT, KC_TAB, KC_ENT
@@ -65,13 +74,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |           |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |   ´    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |   !  |   @  |   <  |   >  |   %  |  [   |           |  ]   |   /  |   7  |   8  |   9  |   *  |        |
+ * |        |   `  |   @  |   <  |   >  |   %  |  {   |           |  }   |   /  |   7  |   8  |   9  |   *  |   ->   |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |   #  |   $  |   '  |   \  |   0  |------|           |------|   .  |   4  |   5  |   6  |   +  |        |
- * |--------+------+------+------+------+------|  {   |           |  }   |------+------+------+------+------+--------|
- * |        |   ~  |   =  |   ^  |   &  |   |  |      |           |      |   ,  |   1  |   2  |   3  |   -  |        |
+ * |        |   #  |   $  |   '  |   \  |   =  |------|           |------|   .  |   4  |   5  |   6  |   +  |   =>   |
+ * |--------+------+------+------+------+------|  [   |           |  ]   |------+------+------+------+------+--------|
+ * |        |   ~  |   €  |   &  |   ^  |   |  |      |           |      |   ,  |   1  |   2  |   3  |   -  |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |  ->  |   €  |      |      |                                       |      |      |   0  |      |      |
+ *   |      |      |      |      |      |                                       |      |      |      |   0  |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |      |       |      |      |
@@ -85,19 +94,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [SYMB] = KEYMAP(
        // left hand
        KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
-       KC_TRNS, DE_EXLM, DE_AT,   DE_LESS, DE_MORE, DE_PERC, DE_LBRC,
-       KC_TRNS, DE_HASH, DE_DLR,  DE_QUOT, DE_BSLS, KC_P0,
-       KC_TRNS, DE_TILD, DE_EQL,  DE_CIRC, DE_AMPR, DE_PIPE, DE_LCBR,
-       KC_TRNS, ARROW,   DE_EURO, KC_TRNS, KC_TRNS,
+       KC_TRNS, DE_GRV,  DE_AT,   DE_LESS, DE_MORE, DE_PERC, DE_LCBR,
+       KC_TRNS, DE_HASH, DE_DLR,  DE_QUOT, DE_BSLS, DE_EQL,
+       KC_TRNS, DE_TILD, DE_EURO, DE_AMPR, DE_CIRC, DE_PIPE, DE_LBRC,
+       KC_TRNS, KC_TRNS, DE_EURO, KC_TRNS, KC_TRNS,
                                        KC_TRNS,KC_TRNS,
                                                KC_TRNS,
                                KC_TRNS,KC_TRNS,KC_TRNS,
        // right hand
        KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  DE_ACUT,
-       DE_RBRC, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, KC_TRNS,
-                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, KC_TRNS,
-       DE_RCBR, DE_COMM, KC_P1,   KC_P2,   KC_P3,   KC_PMNS, KC_TRNS,
-                         KC_TRNS, KC_TRNS, KC_P0,   KC_TRNS, KC_TRNS,
+       DE_RCBR, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, ARROW,
+                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, EQARROW,
+       DE_RBRC, DE_COMM, KC_P1,   KC_P2,   KC_P3,   KC_PMNS, KC_TRNS,
+                         KC_TRNS, KC_TRNS, KC_TRNS, KC_P0,   KC_TRNS,
        KC_TRNS, KC_TRNS,
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_TRNS
@@ -105,44 +114,44 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 2: Media and mouse keys
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |      |      |      |      |      | Power|           | Calc |      |      |      |      |      |        |
+ * |        |      |      |      |      | Calc | Sleep|           |ArrTgl|   1  |   2  |   3  |   4  |   5  |   6    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |      |      | MsUp |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |      | MsUp |      |      |      |           |  Esc |  Tab |   Q  |   W  |   E  |   R  |   T    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|      |      |      |      |      |  Play  |
- * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |           |      |      |      | Prev | Next |      |        |
+ * |        | Prev |MsLeft|MsDown|MsRght| Next |------|           |------|   I  |   A  |   S  |   D  |   F  | Enter  |
+ * |--------+------+------+------+------+------| Print|           |   H  |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |      |   M  |   Y  |   X  |   C  |   V  | LShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |      |      |      |      |                                       |VolUp |VolDn | Mute |      |      |
+ *   |      |      | Mute | VolDn| VolUp|                                       |   B  |   N  |   U  |   O  |   G  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |      |       |      |      |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      |      |       |      |      |      |
- *                                 | Lclk | Back |------|       |------| Fwd  | Rclk |
- *                                 |      |      | Wh_up|       |Wh_dwn|      |      |
+ *                                 |      |      | Wh_up|       |      |      |      |
+ *                                 | Lclk | Rclk |------|       |------| Ctrl |  Alt |
+ *                                 |      |      |Wh_dwn|       | Space|      |      |
  *                                 `--------------------'       `--------------------'
  */
 // MEDIA AND MOUSE
 [MDIA] = KEYMAP(
     // left hand
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PWR,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                                           KC_TRNS, KC_TRNS,
-                                                    KC_TRNS,
-                                  KC_BTN1, KC_WBAK, KC_WH_U,
+       KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_CALC,    KC_SLEP,
+       KC_NO,   KC_NO,   KC_NO,   KC_MS_U, KC_NO,   KC_NO,      KC_NO,
+       KC_NO,   KC_MPRV, KC_MS_L, KC_MS_D, KC_MS_R, KC_MNXT,
+       KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,      KC_PSCREEN,
+       KC_NO,   KC_NO,   KC_MUTE, KC_VOLD, KC_VOLU,
+                                           KC_NO,   KC_NO,
+                                                    KC_WH_U,
+                                  KC_BTN1, KC_BTN2, KC_WH_D,
     // right hand
-       KC_CALC,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                 KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPLY,
-       KC_TRNS,  KC_TRNS, KC_TRNS, KC_MPRV, KC_MNXT, KC_TRNS, KC_TRNS,
-                          KC_VOLU, KC_VOLD, KC_MUTE, KC_TRNS, KC_TRNS,
-       KC_TRNS, KC_TRNS,
-       KC_TRNS,
-       KC_WH_D, KC_WFWD, KC_BTN2
+       GAME_TG,  DE_1,    DE_2,    DE_3,    DE_4,    DE_5,    DE_6,
+       KC_ESC,   KC_TAB,  DE_Q,    GAME_U,  DE_E,    DE_R,    DE_T,
+                 DE_I,    GAME_L,  GAME_D,  GAME_R,  DE_F,    KC_ENT,
+       DE_H,     DE_M,    DE_Y,    DE_X,    DE_C,    DE_V,    KC_LSFT,
+                          DE_B,    DE_N,    DE_U,    DE_O,    DE_G,
+       KC_NO,   KC_NO,
+       KC_NO,
+       KC_SPC,  KC_LCTL, KC_LALT
 ),
 /* Keymap 3: Plover
  *
@@ -195,7 +204,33 @@ const uint16_t PROGMEM fn_actions[] = {
 
 static uint16_t paste_key_timer;
 static uint16_t undo_key_timer;
-static const uint16_t TAP_TIME = 200;
+static uint8_t game_keys_pressed = 0;
+static uint8_t game_use_arrow_keys = 0;
+
+void handle_game_key(keyrecord_t *, uint16_t, uint16_t);
+
+void toggle_steno(void) {
+    uint8_t layer = biton32(layer_state);
+
+    if (layer != PLVR) //Switch the layer
+        layer_on(PLVR);
+    else
+        layer_off(PLVR);
+
+    register_code(PV_LP);
+    register_code(PV_LH);
+    register_code(PV_LR);
+    register_code(PV_O);
+    register_code(PV_RL);
+    register_code(PV_RG);
+    unregister_code(PV_LP);
+    unregister_code(PV_LH);
+    unregister_code(PV_LR);
+    unregister_code(PV_O);
+    unregister_code(PV_RL);
+    unregister_code(PV_RG);
+}
+
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
@@ -205,7 +240,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 paste_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
             }
             else { //when the key is released, decide what to do
-                if(timer_elapsed(paste_key_timer) > TAP_TIME) { //holding is more than 200ms
+                if(timer_elapsed(paste_key_timer) > TAP_TIME) { //holding is more than TAP_TIME
                     return MACRO(D(LCTL), T(C), U(LCTL), END); //copy when held
                 }
                 else {
@@ -213,29 +248,9 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 }
             }
             break;
-        case 1:; //Steno
-            uint8_t layer = biton32(layer_state);
-
-            if (record->event.pressed) { //when the key is pressed, toggle plover and layer
-                if (layer != PLVR) //Switch the layer
-                    layer_on(PLVR);
-                else
-                    layer_off(PLVR);
-
-                register_code(PV_LP);
-                register_code(PV_LH);
-                register_code(PV_LR);
-                register_code(PV_O);
-                register_code(PV_RL);
-                register_code(PV_RG);
-            }
-            else { //when the key is released, finish toggling plover
-                unregister_code(PV_LP);
-                unregister_code(PV_LH);
-                unregister_code(PV_LR);
-                unregister_code(PV_O);
-                unregister_code(PV_RL);
-                unregister_code(PV_RG);
+        case 1: //Steno
+            if(!record->event.pressed) {
+                toggle_steno();
             }
             break;
         case 2: //Close
@@ -248,7 +263,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             }
             else { //when the key is released, decide what to do
                 //NOTICE: the keys are swapped, because this is for a German keyboard layout
-                if(timer_elapsed(undo_key_timer) > TAP_TIME) { //holding is more than 200ms
+                if(timer_elapsed(undo_key_timer) > TAP_TIME) { //holding is more than TAP_TIME
                     return MACRO(D(LCTL), T(Z), U(LCTL), END); //redo when held
                 }
                 else {
@@ -260,9 +275,59 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             if(!record->event.pressed)
                 return MACRO(T(SLSH), D(LSFT), T(NUBS), U(LSFT), END);
             break;
+        case 5: //Eqarrow
+            if(!record->event.pressed)
+                return MACRO(D(LSFT), T(0), T(NUBS), U(LSFT), END);
+            break;
+        case 6: //Up/W
+            handle_game_key(record, KC_UP, DE_W);
+            break;
+        case 7: //Down/S
+            handle_game_key(record, KC_DOWN, DE_S);
+            break;
+        case 8: //Left/A
+            handle_game_key(record, KC_LEFT, DE_A);
+            break;
+        case 9: //Right/D
+            handle_game_key(record, KC_RGHT, DE_D);
+            break;
+        case 10: //Game arrow key toggle
+            if(!record->event.pressed) {
+                if(game_keys_pressed == 0) {
+                    game_use_arrow_keys = !game_use_arrow_keys;
+                }
+            }
+            break;
       }
     return MACRO_NONE;
 };
+
+void handle_game_key(keyrecord_t *record, uint16_t arrow_key, uint16_t letter_key) {
+    if(record->event.pressed) {
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+            game_keys_pressed += 1;
+        }
+        if(game_use_arrow_keys) {
+            register_code(arrow_key);
+        }
+        else {
+            register_code(letter_key);
+        }
+    }
+    else {
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+            game_keys_pressed -= 1;
+        }
+        if(game_use_arrow_keys) {
+            unregister_code(arrow_key);
+        }
+        else {
+            unregister_code(letter_key);
+        }
+    }
+}
+
+LEADER_EXTERNS();
 
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
@@ -279,18 +344,29 @@ void matrix_scan_user(void) {
     ergodox_right_led_2_off();
     ergodox_right_led_3_off();
     switch (layer) {
-      // TODO: Make this relevant to the ErgoDox EZ.
         case 1:
             ergodox_right_led_1_on();
             break;
         case 2:
             ergodox_right_led_2_on();
+            if(game_use_arrow_keys) {
+                ergodox_right_led_3_on();
+            }
             break;
         case 3:
             ergodox_right_led_3_on();
         default:
             // none
             break;
+    }
+
+    LEADER_DICTIONARY() {
+        leading = false;
+        leader_end();
+
+        SEQ_ONE_KEY(KC_S) {
+            toggle_steno();
+        }
     }
 
 };
