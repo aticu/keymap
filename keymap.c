@@ -37,28 +37,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|  /   |           |  #   |------+------+------+------+------+--------|
  * | LSh/(  |   Y  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   -  | RSh/)  |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LCtrl| AltGr| Lead | Left | Right|                                       |  Up  | Down | ~L1  | RCtrl| Play |
+ *   | LCtrl| Lead | AltGr| Left | Right|                                       |  Up  | Down | ~L1  | RCtrl| Play |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | C/P  | Close|       | Home | End  |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      | App  |       | GUI  |      |      |
+ *                                 |      |      | App  |       | Alt  |      |      |
  *                                 | Space| Esc  |------|       |------| Tab  |Enter |
- *                                 |      |      | Alt  |       | Alt  |      |      |
+ *                                 |      |      | GUI  |       | GUI  |      |      |
  *                                 `--------------------'       `--------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
 // Otherwise, it needs KC_*
-[BASE] = KEYMAP(  // layer 0 : default
+[BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
         KC_FN2,         DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
         KC_FN1,         DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
-        KC_LCTL,        DE_ALGR,      KC_LEAD,KC_LEFT,KC_RGHT,
+        KC_LCTL,        KC_LEAD,      KC_RALT,KC_LEFT,KC_RGHT,
                                                  COPYPASTE,     CLOSE,
                                                                KC_APP,
-                                            KC_SPC, KC_ESC,   KC_LALT,
+                                            KC_SPC, KC_ESC,   KC_LGUI,
         // right hand
              UNDOREDO,    DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
              DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
@@ -66,8 +66,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
                                   KC_UP,  KC_DOWN,KC_FN1, KC_RCTL,          KC_MPLY,
              KC_HOME, KC_END,
-             KC_LGUI,
-             KC_LALT, KC_TAB, KC_ENT
+             KC_LALT,
+             KC_LGUI, KC_TAB, KC_ENT
     ),
 /* Keymap 1: Symbol Layer
  *
@@ -91,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // SYMBOLS
-[SYMB] = KEYMAP(
+[SYMB] = LAYOUT_ergodox(
        // left hand
        KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
        KC_TRNS, DE_GRV,  DE_AT,   DE_LESS, DE_MORE, DE_PERC, DE_LCBR,
@@ -133,7 +133,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // MEDIA AND MOUSE
-[MDIA] = KEYMAP(
+[MDIA] = LAYOUT_ergodox(
     // left hand
        KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_CALC,    KC_SLEP,
        KC_NO,   KC_NO,   KC_NO,   KC_MS_U, KC_NO,   KC_NO,      KC_NO,
@@ -175,7 +175,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // Plover
-[PLVR] = KEYMAP(
+[PLVR] = LAYOUT_ergodox(
     // left hand
        STENO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
        KC_NO,   PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,
