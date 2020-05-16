@@ -27,4 +27,9 @@
 
     // To avoid frustration.
     #define PREVENT_STUCK_MODIFIERS
+
+    // Recommended by Ergodox EZ readme
+    #ifndef QMK_KEYS_PER_SCAN
+        #define QMK_KEYS_PER_SCAN 4
+    #endif
 #endif

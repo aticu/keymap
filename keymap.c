@@ -8,22 +8,28 @@
 
 #define TAP_TIME 100
 
-#define BASE 0 // default layer
-#define SYMB 1 // symbols
-#define MDIA 2 // media keys
-#define PLVR 3 //steno using plover
+// *** Define layers ***
+#define BASE 0 // Default layer
+#define SYMB 1 // Symbols
+#define GAME 2 // Gaming and media keys
+#define PLVR 3 // Stenography using plover
 
-#define COPYPASTE M(0) // Macro 0: The copy paste key
-#define STENO M(1) // Macro 1: Switch to steno layer and activate plover
-#define CLOSE M(2) //Macro 2: Close the currently opened window
-#define UNDOREDO M(3) //Macro 3: The undo redo key
-#define ARROW M(4) //Macro 4: Inserts an arrow (->)
-#define EQARROW M(5) //Macro 5: Inserts a different arrow (=>)
-#define GAME_U M(6) //Macro 6: Presses the UP key for games
-#define GAME_D M(7) //Macro 7: Presses the DOWN key for games
-#define GAME_L M(8) //Macro 8: Presses the LEFT key for games
-#define GAME_R M(9) //Macro 9: Presses the RIGHT key for games
-#define GAME_TG M(10) //Macro 10: Toggle between using the arrow keys and WASD for games
+// *** Define macros ***
+#define COPYPASTE 0  // The copy paste key
+#define STENO 1      // Switch to steno layer and activate plover
+#define CLOSE 2      // Close the currently opened window
+#define UNDOREDO 3   // The undo redo key
+#define ARROW 4      // Inserts an arrow (->)
+#define EQARROW 5    // Inserts a different arrow (=>)
+#define GAME_U 6     // Presses the UP key for games
+#define GAME_D 7     // Presses the DOWN key for games
+#define GAME_L 8     // Presses the LEFT key for games
+#define GAME_R 9     // Presses the RIGHT key for games
+#define GAME_TG 10   // Toggle between using the arrow keys and WASD for games
+
+// *** Define key aliases ***
+#define LR_SYMB KC_FN1 // Switch to the symbol layer
+#define LR_GAME KC_FN2 // Switch to the gaming layer
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
@@ -47,24 +53,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 |      |      | GUI  |       | GUI  |      |      |
  *                                 `--------------------'       `--------------------'
  */
-// If it accepts an argument (i.e, is a function), it doesn't need KC_.
-// Otherwise, it needs KC_*
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
-        KC_FN2,         DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
-        KC_FN1,         DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
+        LR_GAME,        DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
+        LR_SYMB,        DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
         KC_LCTL,        KC_LEAD,      KC_RALT,KC_LEFT,KC_RGHT,
-                                                 COPYPASTE,     CLOSE,
+                                               M(COPYPASTE), M(CLOSE),
                                                                KC_APP,
                                             KC_SPC, KC_ESC,   KC_LGUI,
         // right hand
-             UNDOREDO,    DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
+             M(UNDOREDO), DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
              DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
                           DE_H,   DE_J,   DE_K,   DE_L,   DE_OE,            DE_AE,
              DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
-                                  KC_UP,  KC_DOWN,KC_FN1, KC_RCTL,          KC_MPLY,
+                                  KC_UP,  KC_DOWN,LR_SYMB,KC_RCTL,          KC_MPLY,
              KC_HOME, KC_END,
              KC_LALT,
              KC_LGUI, KC_TAB, KC_ENT
@@ -103,8 +107,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                KC_TRNS,KC_TRNS,KC_TRNS,
        // right hand
        KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  DE_ACUT,
-       DE_RCBR, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, ARROW,
-                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, EQARROW,
+       DE_RCBR, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, M(ARROW),
+                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, M(EQARROW),
        DE_RBRC, DE_COMM, KC_P1,   KC_P2,   KC_P3,   KC_PMNS, KC_TRNS,
                          KC_TRNS, KC_TRNS, KC_TRNS, KC_P0,   KC_TRNS,
        KC_TRNS, KC_TRNS,
@@ -133,7 +137,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // MEDIA AND MOUSE
-[MDIA] = LAYOUT_ergodox(
+[GAME] = LAYOUT_ergodox(
     // left hand
        KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_CALC,    KC_SLEP,
        KC_NO,   KC_NO,   KC_NO,   KC_MS_U, KC_NO,   KC_NO,      KC_NO,
@@ -144,11 +148,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                     KC_WH_U,
                                   KC_BTN1, KC_BTN2, KC_WH_D,
     // right hand
-       GAME_TG,  DE_1,    DE_2,    DE_3,    DE_4,    DE_5,    DE_6,
-       KC_ESC,   KC_TAB,  DE_Q,    GAME_U,  DE_E,    DE_R,    DE_T,
-                 DE_I,    GAME_L,  GAME_D,  GAME_R,  DE_F,    KC_ENT,
-       DE_H,     DE_M,    DE_Y,    DE_X,    DE_C,    DE_V,    KC_LSFT,
-                          DE_B,    DE_N,    DE_U,    DE_O,    DE_G,
+       M(GAME_TG), DE_1,    DE_2,      DE_3,      DE_4,      DE_5,    DE_6,
+       KC_ESC,     KC_TAB,  DE_Q,      M(GAME_U), DE_E,      DE_R,    DE_T,
+                   DE_I,    M(GAME_L), M(GAME_D), M(GAME_R), DE_F,    KC_ENT,
+       DE_H,       DE_M,    DE_Y,      DE_X,      DE_C,      DE_V,    KC_LSFT,
+                            DE_B,      DE_N,      DE_U,      DE_O,    DE_G,
        KC_NO,   KC_NO,
        KC_NO,
        KC_SPC,  KC_LCTL, KC_LALT
@@ -177,7 +181,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Plover
 [PLVR] = LAYOUT_ergodox(
     // left hand
-       STENO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+       M(STENO),KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
        KC_NO,   PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,
        KC_NO,   PV_LS,   PV_LT,   PV_LP,   PV_LH,   PV_STAR,
        KC_NO,   PV_LS,   PV_LK,   PV_LW,   PV_LR,   PV_STAR, PV_STAR,
@@ -199,7 +203,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const uint16_t PROGMEM fn_actions[] = {
     [1] = ACTION_LAYER_TAP_TOGGLE(SYMB),               // FN1 - Momentary Layer 1 (Symbols)
-    [2] = ACTION_LAYER_TAP_TOGGLE(MDIA)                // FN2 - Momentary Layer 2 (Media)
+    [2] = ACTION_LAYER_TAP_TOGGLE(GAME)                // FN2 - Momentary Layer 2 (Media)
 };
 
 static uint16_t paste_key_timer;
@@ -235,7 +239,7 @@ void toggle_steno(void) {
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
       switch(id) {
-        case 0: //Copy/paste
+        case COPYPASTE:
             if (record->event.pressed) { //when the key is pressed
                 paste_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
             }
@@ -248,16 +252,16 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 }
             }
             break;
-        case 1: //Steno
+        case STENO:
             if(!record->event.pressed) {
                 toggle_steno();
             }
             break;
-        case 2: //Close
+        case CLOSE:
             if(!record->event.pressed)
                 return MACRO(D(LALT), T(F4), U(LALT), END);
             break;
-        case 3: //Undo/redo
+        case UNDOREDO:
             if (record->event.pressed) { //when the key is pressed
                 undo_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
             }
@@ -271,27 +275,27 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 }
             }
             break;
-        case 4: //Arrow
+        case ARROW:
             if(!record->event.pressed)
                 return MACRO(T(SLSH), D(LSFT), T(NUBS), U(LSFT), END);
             break;
-        case 5: //Eqarrow
+        case EQARROW:
             if(!record->event.pressed)
                 return MACRO(D(LSFT), T(0), T(NUBS), U(LSFT), END);
             break;
-        case 6: //Up/W
+        case GAME_U:
             handle_game_key(record, KC_UP, DE_W);
             break;
-        case 7: //Down/S
+        case GAME_D:
             handle_game_key(record, KC_DOWN, DE_S);
             break;
-        case 8: //Left/A
+        case GAME_L:
             handle_game_key(record, KC_LEFT, DE_A);
             break;
-        case 9: //Right/D
+        case GAME_R:
             handle_game_key(record, KC_RGHT, DE_D);
             break;
-        case 10: //Game arrow key toggle
+        case GAME_TG:
             if(!record->event.pressed) {
                 if(game_keys_pressed == 0) {
                     game_use_arrow_keys = !game_use_arrow_keys;
@@ -336,27 +340,38 @@ void matrix_init_user(void) {
 
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
-
-    uint8_t layer = biton32(layer_state);
+    uint8_t layer = get_highest_layer(layer_state);
 
     ergodox_board_led_off();
-    ergodox_right_led_1_off();
-    ergodox_right_led_2_off();
-    ergodox_right_led_3_off();
     switch (layer) {
-        case 1:
-            ergodox_right_led_1_on();
+        case BASE:
+            ergodox_right_led_1_off();
+            ergodox_right_led_2_off();
+            ergodox_right_led_3_off();
             break;
-        case 2:
+        case SYMB:
+            ergodox_right_led_1_on();
+            ergodox_right_led_2_off();
+            ergodox_right_led_3_off();
+            break;
+        case GAME:
+            ergodox_right_led_1_off();
             ergodox_right_led_2_on();
             if(game_use_arrow_keys) {
                 ergodox_right_led_3_on();
+            } else {
+                ergodox_right_led_3_off();
             }
             break;
-        case 3:
+        case PLVR:
+            ergodox_right_led_1_off();
+            ergodox_right_led_2_off();
             ergodox_right_led_3_on();
+            break;
         default:
-            // none
+            ergodox_right_led_1_on();
+            ergodox_right_led_2_on();
+            ergodox_right_led_3_on();
             break;
     }
 
