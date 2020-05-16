@@ -5,6 +5,7 @@
 #include "keymap_german.h"
 #include "keymap_plover.h"
 #include <util/atomic.h>
+#include <sendstring_german.h>
 
 #define TAP_TIME 100
 
@@ -14,18 +15,20 @@
 #define GAME 2 // Gaming and media keys
 #define PLVR 3 // Stenography using plover
 
-// *** Define macros ***
-#define COPYPASTE 0  // The copy paste key
-#define STENO 1      // Switch to steno layer and activate plover
-#define CLOSE 2      // Close the currently opened window
-#define UNDOREDO 3   // The undo redo key
-#define ARROW 4      // Inserts an arrow (->)
-#define EQARROW 5    // Inserts a different arrow (=>)
-#define GAME_U 6     // Presses the UP key for games
-#define GAME_D 7     // Presses the DOWN key for games
-#define GAME_L 8     // Presses the LEFT key for games
-#define GAME_R 9     // Presses the RIGHT key for games
-#define GAME_TG 10   // Toggle between using the arrow keys and WASD for games
+// *** Define macro keys ***
+enum custom_keycodes {
+    COPYPASTE = SAFE_RANGE,
+    STENO,
+    CLOSE,
+    UNDOREDO,
+    ARROW,
+    EQARROW,
+    GAME_U,
+    GAME_D,
+    GAME_L,
+    GAME_R,
+    GAME_TG
+};
 
 // *** Define key aliases ***
 #define LR_SYMB KC_FN1 // Switch to the symbol layer
@@ -60,11 +63,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
         KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
         KC_LCTL,        KC_LEAD,      KC_RALT,KC_LEFT,KC_RGHT,
-                                               M(COPYPASTE), M(CLOSE),
+                                                 COPYPASTE,     CLOSE,
                                                                KC_APP,
                                             KC_SPC, KC_ESC,   KC_LGUI,
         // right hand
-             M(UNDOREDO), DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
+             UNDOREDO,    DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
              DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
                           DE_H,   DE_J,   DE_K,   DE_L,   DE_OE,            DE_AE,
              DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
@@ -107,8 +110,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                KC_TRNS,KC_TRNS,KC_TRNS,
        // right hand
        KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  DE_ACUT,
-       DE_RCBR, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, M(ARROW),
-                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, M(EQARROW),
+       DE_RCBR, KC_PSLS, KC_P7,   KC_P8,   KC_P9,   KC_PAST, ARROW,
+                DE_DOT,  KC_P4,   KC_P5,   KC_P6,   KC_PPLS, EQARROW,
        DE_RBRC, DE_COMM, KC_P1,   KC_P2,   KC_P3,   KC_PMNS, KC_TRNS,
                          KC_TRNS, KC_TRNS, KC_TRNS, KC_P0,   KC_TRNS,
        KC_TRNS, KC_TRNS,
@@ -148,9 +151,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                     KC_WH_U,
                                   KC_BTN1, KC_BTN2, KC_WH_D,
     // right hand
-       M(GAME_TG), DE_1,    DE_2,      DE_3,      DE_4,      DE_5,    DE_6,
-       KC_ESC,     KC_TAB,  DE_Q,      M(GAME_U), DE_E,      DE_R,    DE_T,
-                   DE_I,    M(GAME_L), M(GAME_D), M(GAME_R), DE_F,    KC_ENT,
+       GAME_TG,    DE_1,    DE_2,      DE_3,      DE_4,      DE_5,    DE_6,
+       KC_ESC,     KC_TAB,  DE_Q,      GAME_U,    DE_E,      DE_R,    DE_T,
+                   DE_I,    GAME_L,    GAME_D,    GAME_R,    DE_F,    KC_ENT,
        DE_H,       DE_M,    DE_Y,      DE_X,      DE_C,      DE_V,    KC_LSFT,
                             DE_B,      DE_N,      DE_U,      DE_O,    DE_G,
        KC_NO,   KC_NO,
@@ -181,7 +184,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Plover
 [PLVR] = LAYOUT_ergodox(
     // left hand
-       M(STENO),KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+       STENO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
        KC_NO,   PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,
        KC_NO,   PV_LS,   PV_LT,   PV_LP,   PV_LH,   PV_STAR,
        KC_NO,   PV_LS,   PV_LK,   PV_LW,   PV_LR,   PV_STAR, PV_STAR,
@@ -216,10 +219,11 @@ void handle_game_key(keyrecord_t *, uint16_t, uint16_t);
 void toggle_steno(void) {
     uint8_t layer = biton32(layer_state);
 
-    if (layer != PLVR) //Switch the layer
+    if (layer != PLVR) { //Switch the layer
         layer_on(PLVR);
-    else
+    } else {
         layer_off(PLVR);
+    }
 
     register_code(PV_LP);
     register_code(PV_LH);
@@ -236,97 +240,93 @@ void toggle_steno(void) {
 }
 
 
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
-{
-      switch(id) {
-        case COPYPASTE:
-            if (record->event.pressed) { //when the key is pressed
-                paste_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch(keycode) {
+    case COPYPASTE:
+        if (record->event.pressed) {
+            paste_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
+        } else {
+            if(timer_elapsed(paste_key_timer) > TAP_TIME) {
+                SEND_STRING(SS_LCTL("c")); //copy when held
+            } else {
+                SEND_STRING(SS_LCTL("v")); //paste when tapped
             }
-            else { //when the key is released, decide what to do
-                if(timer_elapsed(paste_key_timer) > TAP_TIME) { //holding is more than TAP_TIME
-                    return MACRO(D(LCTL), T(C), U(LCTL), END); //copy when held
-                }
-                else {
-                    return MACRO(D(LCTL), T(V), U(LCTL), END); //paste when tapped
-                }
+        }
+        break;
+    case STENO:
+        if(!record->event.pressed) {
+            toggle_steno();
+        }
+        break;
+    case CLOSE:
+        if(!record->event.pressed) {
+            SEND_STRING(SS_LALT(SS_TAP(X_F4)));
+        }
+        break;
+    case UNDOREDO:
+        if (record->event.pressed) {
+            undo_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
+        } else {
+            if(timer_elapsed(undo_key_timer) > TAP_TIME) {
+                send_string(SS_LCTL("y")); //redo when held
+            } else {
+                send_string(SS_LCTL("z")); //undo when tapped
             }
-            break;
-        case STENO:
-            if(!record->event.pressed) {
-                toggle_steno();
-            }
-            break;
-        case CLOSE:
-            if(!record->event.pressed)
-                return MACRO(D(LALT), T(F4), U(LALT), END);
-            break;
-        case UNDOREDO:
-            if (record->event.pressed) { //when the key is pressed
-                undo_key_timer = timer_read(); //start a timer to differentiate a tap and a hold
-            }
-            else { //when the key is released, decide what to do
-                //NOTICE: the keys are swapped, because this is for a German keyboard layout
-                if(timer_elapsed(undo_key_timer) > TAP_TIME) { //holding is more than TAP_TIME
-                    return MACRO(D(LCTL), T(Z), U(LCTL), END); //redo when held
-                }
-                else {
-                    return MACRO(D(LCTL), T(Y), U(LCTL), END); //undo when tapped
-                }
-            }
-            break;
-        case ARROW:
-            if(!record->event.pressed)
-                return MACRO(T(SLSH), D(LSFT), T(NUBS), U(LSFT), END);
-            break;
-        case EQARROW:
-            if(!record->event.pressed)
-                return MACRO(D(LSFT), T(0), T(NUBS), U(LSFT), END);
-            break;
-        case GAME_U:
-            handle_game_key(record, KC_UP, DE_W);
-            break;
-        case GAME_D:
-            handle_game_key(record, KC_DOWN, DE_S);
-            break;
-        case GAME_L:
-            handle_game_key(record, KC_LEFT, DE_A);
-            break;
-        case GAME_R:
-            handle_game_key(record, KC_RGHT, DE_D);
-            break;
-        case GAME_TG:
-            if(!record->event.pressed) {
+        }
+        break;
+    case ARROW:
+        if(!record->event.pressed) {
+            send_string("->");
+        }
+        break;
+    case EQARROW:
+        if(!record->event.pressed) {
+            send_string("=>");
+        }
+        break;
+    case GAME_U:
+        handle_game_key(record, KC_UP, DE_W);
+        break;
+    case GAME_D:
+        handle_game_key(record, KC_DOWN, DE_S);
+        break;
+    case GAME_L:
+        handle_game_key(record, KC_LEFT, DE_A);
+        break;
+    case GAME_R:
+        handle_game_key(record, KC_RGHT, DE_D);
+        break;
+    case GAME_TG:
+        if(!record->event.pressed) {
+            ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
                 if(game_keys_pressed == 0) {
                     game_use_arrow_keys = !game_use_arrow_keys;
                 }
             }
-            break;
-      }
-    return MACRO_NONE;
+        }
+        break;
+    }
+    return true;
 };
 
 void handle_game_key(keyrecord_t *record, uint16_t arrow_key, uint16_t letter_key) {
     if(record->event.pressed) {
         ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
             game_keys_pressed += 1;
+            if(game_use_arrow_keys) {
+                register_code(arrow_key);
+            } else {
+                register_code(letter_key);
+            }
         }
-        if(game_use_arrow_keys) {
-            register_code(arrow_key);
-        }
-        else {
-            register_code(letter_key);
-        }
-    }
-    else {
+    } else {
         ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
             game_keys_pressed -= 1;
-        }
-        if(game_use_arrow_keys) {
-            unregister_code(arrow_key);
-        }
-        else {
-            unregister_code(letter_key);
+            if(game_use_arrow_keys) {
+                unregister_code(arrow_key);
+            } else {
+                unregister_code(letter_key);
+            }
         }
     }
 }
