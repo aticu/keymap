@@ -1,17 +1,18 @@
 # Ergodox EZ keymap
 
-This is the keymap for the [Ergodox EZ][ez] that I use. It is supposed to represent a German keyboard layout, but it is tailored to my needs. As of now, only the first two layers are documented.
+This is the keymap for the [Ergodox EZ][ez] that I use.
+It is based on a German keyboard layout, but it is tailored to my needs.
 
  [ez]: https://ergodox-ez.com
 
 Base Layer:
-![german-aticu-layer0](layer0.png)
+![Default layer](layer0.png)
 
 Symbol Layer:
-![german-aticu-layer1](layer1.png)
+![Symbol layer](layer1.png)
 
 Mouse/Game Layer:
-![german-aticu-layer1](layer2.png)
+![Gaming layer](layer2.png)
 
 Special keys:
 * The Copy/Paste key sends the copy command when held and sends the paste command when released.
