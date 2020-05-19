@@ -4,8 +4,6 @@
     #include "../../config.h"
 
     // Use the space cadet shift with a German keyboard layout.
-    #undef LSPO_KEY
-    #undef RSPC_KEY
     #define LSPO_KEY KC_8
     #define RSPC_KEY KC_9
 
@@ -20,7 +18,7 @@
 
     // Configure leader key
     #define LEADER_PER_KEY_TIMING
-    #define LEADER_TIMEOUT 300
+    #define LEADER_TIMEOUT 250
 
     // Make the space cadet feature more accessible.
     #define DISABLE_SPACE_CADET_ROLLOVER
