@@ -10,10 +10,12 @@
 #define TAP_TIME 100
 
 // *** Define layers ***
-#define BASE 0 // Default layer
-#define SYMB 1 // Symbols
-#define GAME 2 // Gaming and media keys
-#define PLVR 3 // Stenography using plover
+enum layers {
+    BASE, // Default layer
+    SYMB, // Symbols
+    GAME, // Gaming and media keys
+    PLVR  // Stenography using plover
+};
 
 // *** Define macro keys ***
 enum custom_keycodes {
@@ -80,24 +82,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 [BASE] = LAYOUT_ergodox(
-        // left hand
-        LR_GAME,        DE_1,         DE_2,   DE_3,   DE_4,   DE_5,   KC_DELETE,
-        LR_SYMB,        DE_Q,         DE_W,   DE_E,   DE_R,   DE_T,   DE_DQOT,
-        KC_BSPC,        DE_A,         DE_S,   DE_D,   DE_F,   DE_G,
-        KC_LSPO,        DE_Y,         DE_X,   DE_C,   DE_V,   DE_B,   DE_SLSH,
-        KC_LCTL,        KC_LEAD,      KC_RALT,KC_LEFT,KC_RGHT,
-                                                 COPYPASTE,     CLOSE,
-                                                               KC_APP,
-                                            KC_SPC, KC_ESC,   KC_LGUI,
-        // right hand
-             UNDOREDO,    DE_6,   DE_7,   DE_8,   DE_9,   DE_0,             DE_SS,
-             DE_PLUS,     DE_Z,   DE_U,   DE_I,   DE_O,   DE_P,             DE_UE,
-                          DE_H,   DE_J,   DE_K,   DE_L,   DE_OE,            DE_AE,
-             DE_HASH,     DE_N,   DE_M,   DE_COMM,DE_DOT, DE_MINS,          KC_RSPC,
-                                  KC_UP,  KC_DOWN,LR_SYMB,KC_RCTL,          KC_HYPR,
-             KC_HOME, KC_END,
-             KC_LALT,
-             KC_LGUI, KC_TAB, KC_ENT
+    // left hand
+    LR_GAME,       DE_1,          DE_2,          DE_3,          DE_4,          DE_5,          KC_DELETE,
+    LR_SYMB,       DE_Q,          DE_W,          DE_E,          DE_R,          DE_T,          DE_DQOT,
+    KC_BSPC,       DE_A,          DE_S,          DE_D,          DE_F,          DE_G,
+    KC_LSPO,       DE_Y,          DE_X,          DE_C,          DE_V,          DE_B,          DE_SLSH,
+    KC_LCTL,       KC_LEAD,       KC_RALT,       KC_LEFT,       KC_RGHT,
+                                                                               COPYPASTE,     CLOSE,
+                                                                                              KC_APP,
+                                                                KC_SPC,        KC_ESC,        KC_LGUI,
+    // right hand
+    UNDOREDO,      DE_6,          DE_7,          DE_8,          DE_9,          DE_0,          DE_SS,
+    DE_PLUS,       DE_Z,          DE_U,          DE_I,          DE_O,          DE_P,          DE_UE,
+                   DE_H,          DE_J,          DE_K,          DE_L,          DE_OE,         DE_AE,
+    DE_HASH,       DE_N,          DE_M,          DE_COMM,       DE_DOT,        DE_MINS,       KC_RSPC,
+                                  KC_UP,         KC_DOWN,       LR_SYMB,       KC_RCTL,       KC_HYPR,
+    KC_HOME,       KC_END,
+    KC_LALT,
+    KC_LGUI,       KC_TAB,        KC_ENT
 ),
 /* Keymap 1: Symbol Layer
  *
@@ -121,24 +123,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 [SYMB] = LAYOUT_ergodox(
-       // left hand
-       KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
-       KC_TRNS, GRAVE,   DE_AT,   DE_LESS, DE_MORE, DE_ACUT, DE_LCBR,
-       KC_TRNS, CMNT,    DC_CMNT, DE_QUOT, DE_BSLS, MD_CODE,
-       KC_TRNS, DE_TILD, DE_EURO, DE_CIRC, CIRCUMF, DE_PIPE, DE_LBRC,
-       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                                       KC_TRNS,KC_TRNS,
-                                               KC_TRNS,
-                               KC_TRNS,KC_TRNS,KC_TRNS,
-       // right hand
-       KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  NUM_TG,
-       DE_RCBR, NUM_DIV, NUM_7,   NUM_8,   NUM_9,   NUM_MUL, ARROW,
-                NUM_DOT, NUM_4,   NUM_5,   NUM_6,   NUM_ADD, EQARROW,
-       DE_RBRC, NUM_COM, NUM_1,   NUM_2,   NUM_3,   NUM_SUB, KC_TRNS,
-                         KC_TRNS, KC_TRNS, KC_TRNS, NUM_0,   KC_TRNS,
-       KC_TRNS, KC_TRNS,
-       KC_TRNS,
-       KC_TRNS, KC_TRNS, KC_TRNS
+    // left hand
+    KC_TRNS,       KC_F1,         KC_F2,         KC_F3,         KC_F4,         KC_F5,         KC_F6,
+    KC_TRNS,       GRAVE,         DE_AT,         DE_LESS,       DE_MORE,       DE_ACUT,       DE_LCBR,
+    KC_TRNS,       CMNT,          DC_CMNT,       DE_QUOT,       DE_BSLS,       MD_CODE,
+    KC_TRNS,       DE_TILD,       DE_EURO,       DE_CIRC,       CIRCUMF,       DE_PIPE,       DE_LBRC,
+    KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS,       KC_TRNS,
+                                                                               KC_TRNS,       KC_TRNS,
+                                                                                              KC_TRNS,
+                                                                KC_TRNS,       KC_TRNS,       KC_TRNS,
+    // right hand
+    KC_F7,         KC_F8,         KC_F9,         KC_F10,        KC_F11,        KC_F12,        NUM_TG,
+    DE_RCBR,       NUM_DIV,       NUM_7,         NUM_8,         NUM_9,         NUM_MUL,       ARROW,
+                   NUM_DOT,       NUM_4,         NUM_5,         NUM_6,         NUM_ADD,       EQARROW,
+    DE_RBRC,       NUM_COM,       NUM_1,         NUM_2,         NUM_3,         NUM_SUB,       KC_TRNS,
+                                  KC_TRNS,       KC_TRNS,       KC_TRNS,       NUM_0,         KC_TRNS,
+    KC_TRNS,       KC_TRNS,
+    KC_TRNS,
+    KC_TRNS,       KC_TRNS,       KC_TRNS
 ),
 /* Keymap 2: Media and mouse keys
  *
@@ -163,23 +165,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [GAME] = LAYOUT_ergodox(
     // left hand
-       KC_TRNS, KC_MPLY, KC_MPRV, KC_MNXT, KC_NO,   KC_NO,      KC_NO,
-       KC_NO,   KC_NO,   KC_NO,   KC_MS_U, KC_NO,   KC_NO,      KC_NO,
-       KC_NO,   KC_NO,   KC_MS_L, KC_MS_D, KC_MS_R, KC_NO,
-       KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,      KC_PSCREEN,
-       GAME_TG, KC_NO,   KC_MUTE, KC_VOLD, KC_VOLU,
-                                           KC_NO,   KC_NO,
-                                                    KC_WH_U,
-                                  KC_BTN1, KC_BTN2, KC_WH_D,
+    KC_TRNS,       KC_MPLY,       KC_MPRV,       KC_MNXT,       KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,         KC_NO,         KC_MS_U,       KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,         KC_MS_L,       KC_MS_D,       KC_MS_R,       KC_NO,
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_PSCREEN,
+    GAME_TG,       KC_NO,         KC_MUTE,       KC_VOLD,       KC_VOLU,
+                                                                               KC_NO,         KC_NO,
+                                                                                              KC_WH_U,
+                                                                KC_BTN1,       KC_BTN2,       KC_WH_D,
     // right hand
-       DE_0,       DE_1,    DE_2,      DE_3,      DE_4,      DE_5,    DE_6,
-       KC_ESC,     KC_TAB,  DE_Q,      GAME_U,    DE_E,      DE_R,    DE_T,
-                   DE_I,    GAME_L,    GAME_D,    GAME_R,    DE_F,    KC_ENT,
-       DE_H,       DE_M,    DE_Y,      DE_X,      DE_C,      DE_V,    KC_LSFT,
-                            DE_B,      DE_N,      DE_U,      DE_O,    DE_G,
-       DE_P,    DE_L,
-       DE_K,
-       KC_SPC,  KC_LCTL, KC_LALT
+    DE_0,          DE_1,          DE_2,          DE_3,          DE_4,          DE_5,          DE_6,
+    KC_ESC,        KC_TAB,        DE_Q,          GAME_U,        DE_E,          DE_R,          DE_T,
+                   DE_I,          GAME_L,        GAME_D,        GAME_R,        DE_F,          KC_ENT,
+    DE_H,          DE_M,          DE_Y,          DE_X,          DE_C,          DE_V,          KC_LSFT,
+                                  DE_B,          DE_N,          DE_U,          DE_O,          DE_G,
+    DE_P,          DE_L,
+    DE_K,
+    KC_SPC,        KC_LCTL,       KC_LALT
 ),
 /* Keymap 3: Plover
  *
@@ -204,23 +206,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [PLVR] = LAYOUT_ergodox(
     // left hand
-       STENO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-       KC_NO,   PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,
-       KC_NO,   PV_LS,   PV_LT,   PV_LP,   PV_LH,   PV_STAR,
-       KC_NO,   PV_LS,   PV_LK,   PV_LW,   PV_LR,   PV_STAR, PV_STAR,
-       KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-                                           KC_NO,   KC_NO,
-                                                    KC_NO,
-                                  PV_A,    PV_O,    KC_NO,
+    STENO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,
+    KC_NO,         PV_LS,         PV_LT,         PV_LP,         PV_LH,         PV_STAR,
+    KC_NO,         PV_LS,         PV_LK,         PV_LW,         PV_LR,         PV_STAR,       PV_STAR,
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+                                                                               KC_NO,         KC_NO,
+                                                                                              KC_NO,
+                                                                PV_A,          PV_O,          KC_NO,
     // right hand
-       KC_NO,    KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-       PV_NUM,   PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,  PV_NUM,
-                 PV_STAR, PV_RF,   PV_RP,   PV_RL,   PV_RT,   PV_RD,
-       PV_STAR,  PV_STAR, PV_RR,   PV_RB,   PV_RG,   PV_RS,   PV_RZ,
-                          KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-       KC_NO,   KC_NO,  
-       KC_NO,  
-       KC_NO,   PV_E,    PV_U
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,        PV_NUM,
+                   PV_STAR,       PV_RF,         PV_RP,         PV_RL,         PV_RT,         PV_RD,
+    PV_STAR,       PV_STAR,       PV_RR,         PV_RB,         PV_RG,         PV_RS,         PV_RZ,
+                                  KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,
+    KC_NO,
+    KC_NO,         PV_E,          PV_U
 ),
 };
 
