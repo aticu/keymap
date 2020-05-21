@@ -14,7 +14,8 @@ enum layers {
     BASE, // Default layer
     SYMB, // Symbols
     GAME, // Gaming and media keys
-    PLVR  // Stenography using plover
+    PLVR, // Stenography using plover
+    GIMP  // Gimp shortcuts layer
 };
 
 // *** Define macro keys ***
@@ -52,7 +53,8 @@ enum custom_keycodes {
     NUM_ENT,
     NUM_COM,
     NUM_DOT,
-    NUM_TG
+    NUM_TG,
+    GIMP_TG
 };
 
 // *** Define key aliases ***
@@ -142,14 +144,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS,
     KC_TRNS,       KC_TRNS,       KC_TRNS
 ),
-/* Keymap 2: Media and mouse keys
+/* Keymap 2: Game and media
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |Ply/Ps| Prev | Next |      |      |      |           |   0  |   1  |   2  |   3  |   4  |   5  |   6    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |      |      | MsUp |      |      |      |           |  Esc |  Tab |   Q  |   W  |   E  |   R  |   T    |
+ * |        |      |      | MsUp |      |      |      |           |  Esc |  Tab |   Q  | W/Up |   E  |   R  |   T    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|   I  |   A  |   S  |   D  |   F  | Enter  |
+ * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|   I  |A/Left|S/Down|D/Rght|   F  | Enter  |
  * |--------+------+------+------+------+------| Print|           |   H  |------+------+------+------+------+--------|
  * |        |      |      |      |      |      |      |           |      |   M  |   Y  |   X  |   C  |   V  | LShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
@@ -224,6 +226,47 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,
     KC_NO,         PV_E,          PV_U
 ),
+/* Keymap 4: Gimp
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * | Ext lyr|      |      |      |      |      |      |           | U/R  |TgSelc|TgGuid|      |      |      | Delete |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |Select|ClrSel| Text |Pencil| Brush| Heal |  Fill  |
+ * |--------+------+------+------+------+------|      |           | None |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |------|           |------|FzySel| Path | Move | Scale|Rotate| Enter  |
+ * |--------+------+------+------+------+------|      |           |Select|------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |Invert|RctSel|ClrPck|ClrSwp|DftClr|Cp/Pst| Shift  |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |      |      |      |      |      |                                       |NewLyr|AncrLr|NwGuid| Alt  | Tab  |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |FstLyr|LstLyr|
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |PrvLyr|      |      |
+ *                                 |      |      |------|       |------| Space| Ctrl |
+ *                                 |      |      |      |       |NxtLyr|      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+[GIMP] = LAYOUT_ergodox(
+    // left hand
+    GIMP_TG,       KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+    KC_NO,         KC_NO,         KC_NO,         KC_NO,         KC_NO,
+                                                                               KC_NO,         KC_NO,
+                                                                                              KC_NO,
+                                                                KC_NO,         KC_NO,         KC_NO,
+    // right hand
+    UNDOREDO,      C(DE_T),       S(C(DE_T)),    KC_NO,         KC_NO,         KC_NO,         KC_DEL,
+    S(C(DE_A)),    S(DE_O),       DE_T,          DE_N,          DE_P,          DE_H,          S(DE_B),
+                   DE_U,          DE_B,          DE_M,          S(DE_S),       S(DE_R),       KC_ENT,
+    C(DE_I),       DE_R,          DE_O,          DE_X,          DE_D,          COPYPASTE,     KC_LSFT,
+                                  S(C(DE_N)),    C(DE_H),       A(DE_G),       KC_LALT,       KC_TAB,
+    KC_HOME,       KC_END,
+    KC_PGUP,
+    KC_PGDN,       KC_SPC,        KC_LCTL
+),
 };
 
 const uint16_t PROGMEM fn_actions[] = {
@@ -273,6 +316,16 @@ void handle_toggle_key(keyrecord_t *record, struct toggle_key_state *state, uint
                 unregister_code(second_key);
             }
         }
+    }
+}
+
+void toggle_gimp(void) {
+    uint8_t layer = get_highest_layer(layer_state);
+
+    if (layer != GIMP) {
+        layer_on(GIMP);
+    } else {
+        layer_off(GIMP);
     }
 }
 
@@ -438,6 +491,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case NUM_TG:
         switch_toggle_key(record, &numpad_keys);
         break;
+    case GIMP_TG:
+        toggle_gimp();
+        break;
     }
     return true;
 };
@@ -483,6 +539,11 @@ void matrix_scan_user(void) {
             ergodox_right_led_2_off();
             ergodox_right_led_3_on();
             break;
+        case GIMP:
+            ergodox_right_led_1_on();
+            ergodox_right_led_2_on();
+            ergodox_right_led_3_off();
+            break;
         default:
             ergodox_right_led_1_on();
             ergodox_right_led_2_on();
@@ -494,6 +555,9 @@ void matrix_scan_user(void) {
         leading = false;
         leader_end();
 
+        SEQ_ONE_KEY(KC_G) {
+            toggle_gimp();
+        }
         SEQ_ONE_KEY(KC_L) {
             register_code(KC_LCTL);
             register_code(KC_LALT);
